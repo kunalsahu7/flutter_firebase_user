@@ -12,10 +12,16 @@ class SplessScreen extends StatefulWidget {
 }
 
 class _SplessScreenState extends State<SplessScreen> {
+  bool isLogin=false;
+  @override
+  void initState() {
+    super.initState();
+    isLogin = FirebaseHelper.firebaseHelper.checkLogin != null;
+  }
   @override
   Widget build(BuildContext context) {
     Timer(Duration(seconds: 3), () {
-      Get.offAndToNamed(FirebaseHelper.firebaseHelper.checkLogin() == null?'/SignIn':'home');
+      Get.offAndToNamed(isLogin?'/SignIn':'home');
     });
     return SafeArea(
       child: Scaffold(

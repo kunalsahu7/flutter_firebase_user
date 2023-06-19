@@ -1,5 +1,7 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_user/screens/home/homeController.dart';
 
 import 'package:get/get.dart';
 
@@ -16,6 +18,7 @@ class USerSCreen extends StatefulWidget {
 
 class _USerSCreenState extends State<USerSCreen> {
   HomeControllor homeControllor = Get.put(HomeControllor());
+  userController user = Get.put(userController());
 
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -97,9 +100,10 @@ class _USerSCreenState extends State<USerSCreen> {
                                   _scaffoldKey.currentState!.openDrawer();
                                 },
                                 icon: Icon(Icons.menu)),
-                            Text("Serch Produc",
-                                style: TextStyle(color: Colors.black54)),
-                            SizedBox(width: 150),
+                            Expanded(
+                              child: Text("Serch Product",
+                                  style: TextStyle(color: Colors.black54)),
+                            ),
                             IconButton(
                                 onPressed: () {}, icon: Icon(Icons.search)),
                             IconButton(
@@ -112,86 +116,70 @@ class _USerSCreenState extends State<USerSCreen> {
                         ),
                       ),
                     ),
+                    Container(
+                      child: CarouselSlider.builder(
+                        itemCount: user.imageList.length,
+                        itemBuilder: (context, index, realIndex) {
+                          return Image.asset(
+                            "${user.imageList.value[index]}",
+                          );
+                        },
+                        options: CarouselOptions(
+                          autoPlay: true,
+                        ),
+                      ),
+                      margin: EdgeInsets.all(10),
+                      width: double.infinity,
+                      height: 200,
+                    ),
                     Expanded(
                       child: GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2),
+                            mainAxisExtent: 200, crossAxisCount: 2),
                         itemCount: homeControllor.DataList.length,
                         itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onLongPress: () {
-                              print(homeControllor.DataList[index].key);
-                              HomeModel homemodal = HomeModel(
-                                key: homeControllor.DataList[index].key,
-                                name: homeControllor.DataList[index].name,
-                                warranty:
-                                homeControllor.DataList[index].warranty,
-                                modelno: homeControllor.DataList[index].modelno,
-                                review: homeControllor.DataList[index].review,
-                                price: homeControllor.DataList[index].price,
-                                paytypes:
-                                homeControllor.DataList[index].paytypes,
-                                notes: homeControllor.DataList[index].notes,
-                                image: homeControllor.DataList[index].image,
-                                chekupadtedata: 1,
-                              );
-                              Get.toNamed(
-                                '/Insert',
-                                arguments: homemodal,
-                              );
+                          return InkWell(
+                            onTap: () {
+                              Get.toNamed("/details",arguments: homeControllor.DataList[index]);
                             },
-                            child: Expanded(
-                              child: Container(
-                                height: 700,
-                                width: 800,
-                                margin: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 5,
-                                      spreadRadius: 5,
-                                      color: Colors.black12,
-                                    ),
-                                  ],
-                                  color: Colors.white,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        child: Image.network(
-                                            "${homeControllor.DataList[index].image}"),height:100,width: 200,),
-                                      SizedBox(height: 20),
-                                      Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Text(
-                                          "NAME :-${homeControllor.DataList[index].name}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Text(
-                                          "PRICE :-${homeControllor.DataList[index].price}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ],
+                            child: Container(
+                              padding: const EdgeInsets.all(8.0),
+                              margin: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    blurRadius: 5,
+                                    spreadRadius: 5,
+                                    color: Colors.black12,
                                   ),
-                                ),
+                                ],
+                                color: Colors.white,
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.network(
+                                    "${homeControllor.DataList[index].image}",
+                                    height: 100,
+                                    width: 100,
+                                  ),
+                                  SizedBox(height: 20),
+                                  Text(
+                                    "NAME :-${homeControllor.DataList[index].name}",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    "PRICE :-${homeControllor.DataList[index].price}",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ],
                               ),
                             ),
                           );
                         },
                       ),
-                    ),
-                    SizedBox(
-                      height: 5,
                     ),
                   ],
                 ),
@@ -204,6 +192,3 @@ class _USerSCreenState extends State<USerSCreen> {
     );
   }
 }
-
-
-

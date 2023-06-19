@@ -114,7 +114,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
                   if (msg == "success") {
                     Get.snackbar("$msg", "Login SuccessFully.");
-                    Get.offAndToNamed("home");
+                    Get.offAndToNamed("/home");
                   }
                   Get.snackbar("$msg", "Login UnSuccessFully.");
                 },
